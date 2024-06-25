@@ -1,0 +1,51 @@
+:root {
+  --orange: rgb(240, 176, 96);
+  --brown: rgb(136, 85, 51);
+}
+
+body {
+    background-color: rgb(253, 224, 230);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+main {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+  
+.main-section {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  background-color: var(--brown);
+  gap: 3px;
+}
+
+.cell {
+  height: 50px;
+  width: 50px;
+  background: var(--orange);
+  font-size: 2rem;
+  display: grid;
+  place-content: center;
+}
+
+.cell.O {
+  color: white;
+}
+
+.cell.X {
+  color: black;
+}
+
+.cell:hover {
+  cursor: pointer;
+}

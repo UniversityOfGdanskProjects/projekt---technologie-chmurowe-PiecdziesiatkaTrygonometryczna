@@ -1,0 +1,50 @@
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@admin.pl", "password": "123"}' \
+  http://localhost:3003/signup
+
+  curl -X PUT \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@admin.pl", "isAdmin": true}' \
+  http://localhost:3003/set-admin
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"email": "nowy_email@example.com", "password": "1234"}' http://localhost:3003/edit-account/22392489-54b4-48ac-b2a5-eadad3f2c106
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "owner": "",
+  "player1": "",
+  "player2": "",
+  "places_of_x": [],
+  "places_of_y": [],
+  "is_over": "value",
+  "player_won": null
+}' http://localhost:3003/api/games
+
+
+
+curl http://localhost:3003/api/games/9b2120c0-52ba-44a9-a134-4f2b78fd2687/owner
+
+curl http://localhost:3003/api/games/9b2120c0-52ba-44a9-a134-4f2b78fd2687/places
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "coordinateX": "G9"
+}' http://localhost:3003/api/games/10e85fe1-eb09-4a71-9a68-6f3fc51752cf/add-x-coordinate
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "coordinateY": "G9"
+}' http://localhost:3003/api/games/10e85fe1-eb09-4a71-9a68-6f3fc51752cf/add-y-coordinate
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"coordinates": ["D4", "E5", "F6", "F10", "F11", "F12", "F13" , "F14"]}' http://localhost:3003/api/games/9b2120c0-52ba-44a9-a134-4f2b78fd2687/edit-y-coordinates
+
+curl -X PUT -H "Content-Type: application/json" -d '{"coordinates": ["A1", "B2", "C3"]}' http://localhost:3003/api/games/9b2120c0-52ba-44a9-a134-4f2b78fd2687/edit-x-coordinates
+
+
+curl -X DELETE http://localhost:3003/api/games/88169a2b-0ae7-4017-ab88-71fb81cad964/delete-coordinate \
+-H "Content-Type: application/json" \
+-d '{
+  "coordinateToDelete": "A1",
+  "coordinateType": "x"
+}'

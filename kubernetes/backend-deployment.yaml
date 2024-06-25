@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gomoku-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gomoku-backend
+  template:
+    metadata:
+      labels:
+        app: gomoku-backend
+    spec:
+      containers:
+      - name: gomoku-backend
+        image: fjlgnrejlgbtrjl/gomoku-server:latest
+        ports:
+        - containerPort: 3003
+        env:
+        - name: MONGODB_URI
+          value: mongodb://gomoku-mongodb-service:27017/gomoku
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gomoku-backend-service
+spec:
+  selector:
+    app: gomoku-backend
+  ports:
+  - protocol: TCP
+    port: 3003
+    targetPort: 3003
+  type: LoadBalancer

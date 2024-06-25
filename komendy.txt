@@ -1,0 +1,14 @@
+sv
+npm install express
+nvm use node
+node index.js
+
+
+cl
+npm install react-scripts
+npm start
+
+
+mosquito:
+
+sudo systemctl restart mosquitto
