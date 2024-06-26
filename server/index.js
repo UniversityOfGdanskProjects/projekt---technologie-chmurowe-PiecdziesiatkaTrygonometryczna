@@ -1,7 +1,7 @@
 const port = 3003;
 const express = require('express');
 const { MongoClient } = require('mongodb');
-const uri = 'mongodb://localhost:27777/';
+const uri = 'mongodb://gomoku-mongodb-service:27017/gomoku';
 const app = express();
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');

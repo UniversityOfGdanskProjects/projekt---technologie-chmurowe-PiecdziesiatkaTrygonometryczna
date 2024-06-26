@@ -20,6 +20,14 @@ spec:
         env:
         - name: MONGODB_URI
           value: mongodb://gomoku-mongodb-service:27017/gomoku
+        resources:
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+
 ---
 apiVersion: v1
 kind: Service

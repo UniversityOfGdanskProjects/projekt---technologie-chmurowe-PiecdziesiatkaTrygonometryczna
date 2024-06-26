@@ -1,0 +1,24 @@
+docker build -t fjlgnrejlgbtrjl/gomoku-client:latest -f client/Dockerfile ./client
+docker build -t fjlgnrejlgbtrjl/gomoku-server:latest -f server/Dockerfile ./server
+
+docker login
+
+docker push fjlgnrejlgbtrjl/gomoku-client:latest
+docker push fjlgnrejlgbtrjl/gomoku-server:latest
+
+
+
+kubectl create namespace gomoku
+kubectl apply -f mongodb-deployment.yaml -n gomoku
+kubectl apply -f backend-deployment.yaml -n gomoku
+kubectl apply -f frontend-deployment.yaml -n gomoku
+kubectl apply -f hpa.yaml
+
+kubectl get pods -n gomoku
+kubectl get services -n gomoku
+
+
+kubectl rollout restart deployment gomoku-frontend -n gomoku
+
+
+

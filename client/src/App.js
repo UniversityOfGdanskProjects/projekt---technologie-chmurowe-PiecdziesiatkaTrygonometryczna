@@ -78,15 +78,15 @@ function App() {
         <LoginButton />
         <Routes>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/dashboard" element={isLoggedIn ? <Dashboard onLogout={handleLogout} isLoggedIn={isLoggedIn} userId={userId} isAdmin={isAdmin} /> : null} />
+          <Route path="/dashboard" element={isLoggedIn ? <Dashboard onLogout={handleLogout} isLoggedIn={isLoggedIn} userId={userId} isAdmin={isAdmin} /> : <Dashboard onLogout={handleLogout} isLoggedIn={isLoggedIn} userId={userId} isAdmin={isAdmin} />} />
           <Route path="/gameboard" element={isLoggedIn ? <GameBoard /> : <GameBoard />} />
-          <Route path="/edit-account" element={isLoggedIn && isAdmin ? <EditAccount /> : null} />
-          <Route path="/search-users" element={isLoggedIn && isAdmin ? <FindUsers /> : null} />
-          <Route path="/game-owner-lookup" element={isLoggedIn && isAdmin ? <GameOwnerLookup /> : null} />
-          <Route path="/edit-coordinates" element={isLoggedIn && isAdmin ? <EditCoordinates /> : null} />
-          <Route path="/delete-coordinate-from" element={isLoggedIn && isAdmin ? <DeleteCoordinateForm /> : null} />
-          <Route path="/game" element={isLoggedIn && isAdmin ? <Game onLogout={handleLogout} /> : null} />
-          <Route path="/chat" element={isLoggedIn ? <Chat userId={userId} /> : null} />
+          <Route path="/edit-account" element={isLoggedIn && isAdmin ? <EditAccount /> : <EditAccount />} />
+          <Route path="/search-users" element={isLoggedIn && isAdmin ? <FindUsers /> :<FindUsers />} />
+          <Route path="/game-owner-lookup" element={isLoggedIn && isAdmin ? <GameOwnerLookup /> : <GameOwnerLookup />} />
+          <Route path="/edit-coordinates" element={isLoggedIn && isAdmin ? <EditCoordinates /> :<EditCoordinates />} />
+          <Route path="/delete-coordinate-from" element={isLoggedIn && isAdmin ? <DeleteCoordinateForm /> : <DeleteCoordinateForm />} />
+          <Route path="/game" element={isLoggedIn && isAdmin ? <Game onLogout={handleLogout} /> : <Game onLogout={handleLogout} />} />
+          <Route path="/chat" element={isLoggedIn ? <Chat userId={userId} /> : <Chat userId={userId} />} />
         </Routes>
       </div>
     </Router>
