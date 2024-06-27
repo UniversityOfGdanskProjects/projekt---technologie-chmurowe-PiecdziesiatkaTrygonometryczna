@@ -1,4 +1,4 @@
-const port = 3003;
+const port = 3004;
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const uri = 'mongodb://gomoku-mongodb-service:27017/gomoku';
@@ -27,6 +27,17 @@ app.use(cors());
 app.use(express.json());
 
 
+app.get('/healthz', (req, res) => {
+  const start = Date.now();
+  const duration = Date.now() - start;
+  res.status(200).send({ status: 'ok', responseTime: `${duration}ms` });
+});
+
+app.get('/readiness', (req, res) => {
+  const start = Date.now();
+  const duration = Date.now() - start;
+  res.status(200).send({ status: 'ready', responseTime: `${duration}ms` });
+});
 
 
 app.post('/api/games/:gameId/add-x-coordinate', async (req, res) => {

@@ -85,17 +85,17 @@
 \rhead{\hmwkAuthorName} % Top left header
 \lhead{\hmwkClass: \hmwkTitle} % Top center header
 \rhead{\firstxmark} % Top right header
-\lfoot{Jan Kowalski} % Bottom left footer
+\lfoot{Dawid Kalinowski} % Bottom left footer
 \cfoot{} % Bottom center footer
 \rfoot{} % Bottom right footer
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
 
     
-\newcommand{\hmwkTitle}{Tytuł projektu z technologii chmurowych} % Tytuł projektu
+\newcommand{\hmwkTitle}{Aplikacja do gry w Gomoku} % Tytuł projektu
 \newcommand{\hmwkDueDate}{\today} % Data 
 \newcommand{\hmwkClass}{Technologie chmurowe} % Nazwa przedmiotu
-\newcommand{\hmwkAuthorName}{Jan Kowalski} % Imię i nazwisko
+\newcommand{\hmwkAuthorName}{Dawid Kalinowski} % Imię i nazwisko
 
 % trabalho 
 \begin{document}
@@ -136,52 +136,62 @@
 \section{Opis projektu}
 \label{sec:Project}
 
-Tutaj wypisujemy szczegółowe informacje o celu powstania projektu (jakaś historyjka, że pewna firma/osoba potrzebuje bazy, która ...)
+Firma zajmująca się grami planszowymi, Board Games Interactive, zleciła stworzenie aplikacji webowej, która będzie docelowo obsługiwała rozgrywki w przeróżnych grach planszowych, między graczami z całego świata. Na sam początek przedsiębiorstwo postanowiło zapewnić graczom możliwość gry w grę "Gomoku". Serwis ma działać w przeglądarce, zarówno na komputerach, jak i na urządzeniach mobilnych. System musi zapewnić płynną rozgrywkę dla tysięcy graczy jednocześnie.
 
-\subsection{Opis architektury - 8 pkt}
+\subsection{Opis architektury - 6 pkt}
 \label{sec:introduction}
-Powinna zawierać opis architektury aplikacji opartej na Kubernetes, w tym opis klastrowego systemu zarządzania kontenerami, wykorzystanych modułów i komponentów
-
+Architektura aplikacji została zaimplementowana w środowisku Kubernetes, co w przyszłości umożliwi łatwiejsze skalowanie aplikacji oraz wdrażanie nowych zmian. Składa się z trzech oddzielnych komponentów: Backendu w Node.js, Frontendu w React.js oraz bazy danych MongoDB. Każdy z nich jest osobnym kontenerem w klastrze Kubernetes.
 
 \subsection{Opis infrastruktury - 6 pkt}
 \label{sec:Users}
+Aplikacja korzysta z platformy Kubernetes, oraz przechowuje obrazy Dockerowe na platformie DockerHub. Frontend i backend używają LoadBalancer do komunikowania się z innymi klastrami w Kubernetesie.\\
+Backend używa Node.js, biblioteki Express, komunikuje się z bazą danych za pomocą Mongoose. Używa również WebSocketów (biblioteka ws) oraz JWT.\\
+Frontend używa frameworka React.js, a zarządzanie sesją użytkownika odbywa się za pomocą js-cookie.\\
+Baza danych używa ClusterIP do komunikowania się z innymi klastrami w Kubernetesie.
 
-Powinien zawierać informacje na temat środowiska, w którym aplikacja będzie działać, a także wykorzystanych narzędzi i platformy chmurowe. Ważne jest również zwrócenie uwagi na wykorzystanie zasobów, takich jak sieci i pamięci masowej.
-
-\subsection{Opis komponentów aplikacji - 8 pkt}
+\subsection{Opis komponentów aplikacji - 6 pkt}
 \label{sec:FunctionalConditions}
+Aplikacja składa się z trzech głównych komponentów:
+\begin{itemize}
+    \item \textbf{Backend (Node.js):} Backend aplikacji został wyprodukowany w Node.js przy użyciu frameworka Express.js. Odpowiada za obsługę użytkowników oraz gier, między innymi poprzez pobieranie oraz wysyłanie informacji z / do bazy danych w MongoDB. Backend udostępnia RESTful API, które obsługuje operacje takie jak rejestracja, logowanie użytkowników, tworzenie, dołączanie do gier, w przypadku Gomoku również stawianie pionków na planszy. Panel administratora udostępnia również takie funkcjonalności, jak edycja poszczególnych instancji gier, manipulowanie uprawnieniami oraz danymi zwykłych użytkowników. Do zarządzania stanem sesji użytkowników zastosowano tokeny JWT, a logowanie użytkowników jest zabezpieczone funkcją hahsującą, a dokładniej bcrypt. Aplikacja umożliwia również czatowanie z innymi użytkownikami na wspólnym forum, za pomocą protokołu MQTT.
 
-Powinna zawierać informacje na temat komponentów aplikacji, takich jak serwisy, aplikacje i bazy danych. W szczególności należy zwrócić uwagę na sposoby ich wdrażania, konfiguracji i zarządzania.
+    
+    \item \textbf{Frontend (React.js):} Frontend aplikacji został zaimplementowany w bibliotece React.js. Użytkownik może, korzystając z intuicyjnych komponentów, takich jak pola tekstowe, przyciski, poruszać się po aplikacji, w szczególności dołączać do gier oraz grać. Aplikacja posiada przejrzystą planszę do gry w Gomoku, która po zmianie stanu planszy na bieżąco się odświeża. Frontend komunikuje się z Backendem za pomocą zapytań HTTP, przesyłając i odbierając dane w formacie JSON.
+    Aplikacja jest również przystosowana pod urządzenia mobilne, uzależniając rozmiar poszczególnych komponentów od maksymalnej rozdzielcości okna.
+    \item \textbf{Baza danych MongoDB:} Do przechowywania informacji o wszystkich użytkownikach, oraz toczonych grach w aplikacji, wykorzystano MongoDB, bazę danych NoSQL. Baza przechowuje dane użytkowników, informacje zarówno o wszystkich aktualnie toczonych meczach, jak i historycznych gier.
+\end{itemize}
+Każdy komponent jest skonfigurowany w osobnym pliku YAML dla Kubernetes i jest wdrażany jako oddzielny pod.
 
 \subsection{Konfiguracja i zarządzanie - 4 pkt}
 \label{sec:NonFunctionalConditions}
-
-Powinna zawierać informacje na temat konfiguracji i zarządzania aplikacją na poziomie klastra Kubernetes.
+Konfiguracja aplikacji odbywa się poprzez pliki YAML dla Kubernetes, które definiują deploymenty i serwisy. Deployment zarówno backendu, jak i frontendu, definiuje obraz Docker, m.in. liczbę replik - w tym przypadku 3 - oraz zmienne środowiskowe, w tym URI do bazy danych MongoDB. Usługa zapewnia zewnętrzny dostęp do backendu i frontendu poprzez LoadBalancer. Baza danych również jest w 3 replikach, a komunikacja odbywa się za pomocą ClusterIP.
 
 \subsection{Zarządzanie błędami - 2 pkt}
+Aplikacja obsługuje błędy róznych zapytań, i wszelkie nieudane / nieprawidłowe działania wypisuje w konsoli użytkownika.
 \label{sec:ERD} 
-
-Powinna zawierać informacje na temat sposobów zarządzania błędami aplikacji oraz sposobów monitorowania i reagowania na awarie.
-
 
 \subsection{Skalowalność - 4 pkt}
 \label{sec:ExamplesSection}
-
-Skalowalność jest kluczowa w architekturze aplikacji opartej na Kubernetes. Należy opisać, jak aplikacja może być skalowana, w jaki sposób skalowanie jest monitorowane i jakie narzędzia są wykorzystywane w tym celu.
+Za skalowalność aplikacji jest odpowiedzialny Horizontal Pod Autoscaler (HPA). Jest skonfigurowany do monitorowania backendu, i zmienia liczbę jego replik w zakresie liczb 3-10, w zależności od obciążenia procesora. Aktualnie jego średnie zużycie jest ustawione na poziomie 60%.
 
 \subsection{Wymagania dotyczące zasobów - 2 pkt}
 \label{sec:ExampleTables}
-
-Powinna zawierać informacje na temat wymagań dotyczących zasobów dla każdego komponentu aplikacji, takie jak ilość pamięci RAM, CPU, miejsce na dysku, itp. Należy również opisać, jakie są oczekiwania dotyczące wydajności i czasu odpowiedzi dla aplikacji.
-
+Wymagania dotyczące zasobów są następujące:
+\begin{itemize}
+    \item \textbf{Backend:} Minimalne: 0.5 CPU, 512MB RAM, Maksymalne: 1 CPU, 1 GB RAM
+    \item \textbf{Frontend:} Minimalne: 0.25 CPU, 256MB RAM, Maksymalne: 0.5 CPU, 512MB RAM
+    \item \textbf{Baza danych:} Minimalne: 0.5 CPU, 1GB Ram,
+    Maksymalne: 1CPU, 2GB Ram
+\end{itemize}
+Wszystkie powinny wykonywać się w akceptowalnym dla użytkownika czasie, poniżej 100 ms.
 
 \subsection{Architektura sieciowa - 4 pkt}
 \label{sec:ExampleResults}
-
-powinna zawierać informacje na temat architektury sieciowej aplikacji, w tym sposobu konfiguracji sieci w klastrze Kubernetes, wykorzystywanych protokołów i narzędzi do zarządzania siecią.
-
+Wszystkie serwisy w klastrze komunikują się ze sobą w sieci lokalnej localhost. Serwisy są skonfigurowane na działanie w następujących portach:\\
+- Backend nasłuchuje na porcie 3003\\
+- Frontnend na porcie 3000\\
+- Baza danych na porcie 27017
 \noindent
-\textbf{Każdy odnośnik, który znajdzie się w literaturze musi mieć swoje odwołanie w projekcie. - 2 pkt} 
 
 \bibliographystyle{amsplain}
 \bibliography{references.bib}

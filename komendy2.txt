@@ -20,5 +20,5 @@ kubectl get services -n gomoku
 
 kubectl rollout restart deployment gomoku-frontend -n gomoku
 
-
+kubectl proxy
 
